@@ -114,9 +114,14 @@ func getStatus(r Request) int {
 	status := 200
 	value, ok := getEchoSetting(r, "Status")
 	if ok {
-		status, _ = strconv.Atoi(value)
-		if *debug {
-			log.Printf("Returning explicit status: %v\n", status)
+		parsed, err := strconv.Atoi(value)
+		if err == nil && parsed >= 100 && parsed <= 999 {
+			status = parsed
+			if *debug {
+				log.Printf("Returning explicit status: %v\n", status)
+			}
+		} else if *debug {
+			log.Printf("Invalid status value %q, defaulting to %v", value, status)
 		}
 	}
 	return status
