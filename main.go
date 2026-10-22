@@ -106,7 +106,7 @@ func doDelay(r Request) {
 		log.Printf("Invalid delay value %q: %v", value, err)
 		return
 	}
-	log.Printf("Delaying response by %v seconds\n", delay)
+	log.Printf("Delaying response by %v\n", delay)
 	time.Sleep(delay)
 }
 
