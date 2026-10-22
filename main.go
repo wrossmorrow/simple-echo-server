@@ -60,7 +60,6 @@ func echo(w http.ResponseWriter, req *http.Request) {
 
 	doDelay(r)
 	r.Status = getStatus(r)
-	w.WriteHeader(r.Status)
 
 	r.Duration = time.Since(started).Nanoseconds()
 
@@ -70,10 +69,12 @@ func echo(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method == "OPTIONS" || req.Method == "HEAD" || r.Status == 204 {
 		w.Header().Set("Content-Length", "0")
+		w.WriteHeader(r.Status)
 		w.Write([]byte{})
 	} else {
 		rb, _ := json.Marshal(r)
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(r.Status)
 		w.Write(rb)
 	}
 
