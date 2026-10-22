@@ -32,7 +32,7 @@ Response behavior is controlled via `X-Echo-*` request headers:
 - `X-Echo-Status: 404` — respond with the given HTTP status code. Defaults to
   `200` if the value is missing or invalid.
 
-Status values outside the valid range (`100`–`999`) or unparseable values fall
+Status values outside the valid range (`200`–`599`) or unparseable values fall
 back to a `200` response.
 
 ## Examples
