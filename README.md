@@ -61,3 +61,4 @@ curl -H "X-Echo-Status: 503" http://localhost:8000/
   header-based settings (`X-Echo-*`).
 - Header values are reflected back in the echoed JSON response under the
   `Headers` map.
+- Responses are always JSON-encoded.
