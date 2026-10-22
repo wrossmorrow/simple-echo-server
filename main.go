@@ -67,7 +67,7 @@ func echo(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "HEAD, OPTIONS, GET, PUT, POST, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
-	if req.Method == "OPTIONS" || req.Method == "HEAD" || r.Status == 204 {
+	if req.Method == "OPTIONS" || req.Method == "HEAD" || r.Status == 204 || r.Status == 304 {
 		w.Header().Set("Content-Length", "0")
 		w.WriteHeader(r.Status)
 		w.Write([]byte{})
@@ -115,12 +115,12 @@ func getStatus(r Request) int {
 	value, ok := getEchoSetting(r, "Status")
 	if ok {
 		parsed, err := strconv.Atoi(value)
-		if err == nil && parsed >= 100 && parsed <= 999 {
+		if err == nil && parsed >= 200 && parsed <= 599 {
 			status = parsed
 			if *debug {
 				log.Printf("Returning explicit status: %v\n", status)
 			}
-		} else if *debug {
+		} else {
 			log.Printf("Invalid status value %q, defaulting to %v", value, status)
 		}
 	}
