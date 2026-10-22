@@ -1,6 +1,6 @@
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened]
   push:
     branches:
       - main
@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: Slashgear/action-check-pr-title@v4.3.0
         with:
-          regexp: "^(Revert \")?((minor|fix|config|infra|ci|doc|spelling|dependency)?) (.*){256}[\"]?$"
+          regexp: '^(?=.{1,100}$)(Revert ")?(feat|fix|minor|config|infra|ci|docs?|spelling|dependency)(\([a-z0-9-]+\))?!?: \S.*$'
   pr-labels:
     name: PR labelling
     runs-on: ubuntu-latest
