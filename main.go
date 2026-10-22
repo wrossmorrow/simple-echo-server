@@ -81,20 +81,39 @@ func echo(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func doDelay(r Request) {
-	value, ok := r.Query["delay"]
-	if ok && len(value) > 0 {
-		delay, _ := time.ParseDuration(value[0] + "s")
-		log.Printf("Delaying response by %v seconds\n", delay)
-		time.Sleep(delay)
+// getEchoSetting looks up an echo setting by name, expecting it to be
+// specified via an HTTP header prefixed with "X-Echo-".
+func getEchoSetting(r Request, name string) (string, bool) {
+	key := http.CanonicalHeaderKey("X-Echo-" + name)
+	if values, ok := r.Headers[key]; ok && len(values) > 0 {
+		return values[0], true
 	}
+	return "", false
+}
+
+func doDelay(r Request) {
+	value, ok := getEchoSetting(r, "Delay")
+	if !ok {
+		return
+	}
+	delay, err := time.ParseDuration(value)
+	if err != nil {
+		// Allow bare numbers to be treated as seconds, e.g. "2" == "2s".
+		delay, err = time.ParseDuration(value + "s")
+	}
+	if err != nil {
+		log.Printf("Invalid delay value %q: %v", value, err)
+		return
+	}
+	log.Printf("Delaying response by %v seconds\n", delay)
+	time.Sleep(delay)
 }
 
 func getStatus(r Request) int {
 	status := 200
-	value, ok := r.Query["status"]
-	if ok && len(value) > 0 {
-		status, _ = strconv.Atoi(value[0])
+	value, ok := getEchoSetting(r, "Status")
+	if ok {
+		status, _ = strconv.Atoi(value)
 		if *debug {
 			log.Printf("Returning explicit status: %v\n", status)
 		}
