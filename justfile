@@ -1,4 +1,6 @@
 
+image_name := "ghcr.io/wrossmorrow/simple-echo-server"
+
 # list targets and exit
 default:
     just --list
@@ -17,4 +19,4 @@ test:
 
 # containerize
 containerize tag="local":
-    docker build -t echo:{{tag}} .
+    docker build -t {{image_name}}:{{tag}} .
