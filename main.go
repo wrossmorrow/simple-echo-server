@@ -66,6 +66,7 @@ func echo(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "HEAD, OPTIONS, GET, PUT, POST, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	w.Header().Set("X-Echo-Server-Received", req.Method+"@"+req.URL.String())
 
 	if req.Method == "OPTIONS" || req.Method == "HEAD" || r.Status == 204 || r.Status == 304 {
 		w.Header().Set("Content-Length", "0")
